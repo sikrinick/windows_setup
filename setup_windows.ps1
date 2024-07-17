@@ -38,6 +38,24 @@ Write-Output "Chrome is installed"
 $officeInstallProcess.WaitForExit()
 Write-Output "Office 2021 is installed"
 
+# Post-install
+# Copy shortcuts from start menu to desktop 
+Copy-Item `
+    -Path "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Microsoft Office 2021\Word.lnk" `
+    -Destination $env:Public\Desktop\ `
+    -Force
+
+Copy-Item `
+    -Path "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Microsoft Office 2021\Excel.lnk" `
+    -Destination $env:Public\Desktop\ `
+    -Force
+
+Copy-Item `
+    -Path "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Microsoft Office 2021\PowerPoint.lnk" `
+    -Destination $env:Public\Desktop\ `
+    -Force
+
+
 # Try to activate products, if possible
 Try {
     Import-Module .\install\activate.psm1
