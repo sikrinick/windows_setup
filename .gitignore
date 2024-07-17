@@ -1,0 +1,7 @@
+.DS_Store
+
+# App configuration
+configuration.json
+
+# Activation scripts
+install/activate.psm1
