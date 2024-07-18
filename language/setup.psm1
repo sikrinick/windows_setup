@@ -4,7 +4,6 @@ function Install-PrimaryLanguage {
         [Parameter(Mandatory=$true)]
         [string]$LanguageCode
     )
-    $LanguageCode = $Locale.LanguageCode
     Write-Output "Installing primary language and installing language pack: $LanguageCode"
     Install-Language $LanguageCode
 }
@@ -51,7 +50,7 @@ function Set-PrimaryLocale {
     Set-WinHomeLocation -GeoId $GeoId
 
     # Set time zone to Kyiv
-    Set-TimeZone -Name $TimeZone
+    Set-TimeZone -Id $TimeZone
 
     # TODO! Set primary locale settings as default for new and system users
 }

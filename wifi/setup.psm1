@@ -10,32 +10,32 @@ function Setup-Wifi {
 
     # Create the Wi-Fi profile XML content
     $ProfileXml = @"
-        <?xml version="1.0"?>
-        <WLANProfile xmlns="http://www.microsoft.com/networking/WLAN/profile/v1">
-            <name>$SSID</name>
-            <SSIDConfig>
-                <SSID>
-                    <name>$SSID</name>
-                </SSID>
-            </SSIDConfig>
-            <connectionType>ESS</connectionType>
-            <connectionMode>auto</connectionMode>
-            <MSM>
-                <security>
-                    <authEncryption>
-                        <authentication>WPA2PSK</authentication>
-                        <encryption>AES</encryption>
-                        <useOneX>false</useOneX>
-                    </authEncryption>
-                    <sharedKey>
-                        <keyType>passPhrase</keyType>
-                        <protected>false</protected>
-                        <keyMaterial>$Password</keyMaterial>
-                    </sharedKey>
-                </security>
-            </MSM>
-        </WLANProfile>
-    "@
+<?xml version="1.0"?>
+<WLANProfile xmlns="http://www.microsoft.com/networking/WLAN/profile/v1">
+    <name>$SSID</name>
+    <SSIDConfig>
+        <SSID>
+            <name>$($SSID)</name>
+        </SSID>
+    </SSIDConfig>
+    <connectionType>ESS</connectionType>
+    <connectionMode>auto</connectionMode>
+    <MSM>
+         <security>
+            <authEncryption>
+                <authentication>WPA2PSK</authentication>
+                <encryption>AES</encryption>
+                <useOneX>false</useOneX>
+            </authEncryption>
+            <sharedKey>
+                <keyType>passPhrase</keyType>
+                <protected>false</protected>
+                <keyMaterial>$($Password)</keyMaterial>
+            </sharedKey>
+        </security>
+    </MSM>
+</WLANProfile>
+"@
 
     # Save the profile XML to a temporary file
     $TempProfilePath = [System.IO.Path]::GetTempFileName() + ".xml"
