@@ -23,17 +23,17 @@ A bunch of Powershell scripts to prepare used laptops with preinstalled Windows 
 ## Setup
 
 Firstly, you have to create file `configuration.json`, you can check example below.  
-In this example `PrimaryGeoId` is set to `Ukraine` and `PrimaryTimeZone` is set to `Kyiv`.
+In this example `GeoId` is set to `Ukraine` and `TimeZone` is set to `Kyiv`.
 ```json
 {
-    "SSID": "Your_wifi_SSID",
-    "Password": "YoUrWiFiPassWorD",
-
+    "SSID": "YOUR_SSID",
+    "Password": "Y0UrP@SsWord!",
+    
     "PrimaryLanguageCode": "uk-UA",
-    "PrimaryGeoId": 241,
-    "PrimaryTimeZone": "FLE Standard Time",
-
-    "SecondaryLanguages": ["en-US"]
+    "SecondaryLanguages": ["en-US"],
+    
+    "GeoId": 241, 
+    "TimeZone": "FLE Standard Time"
 }
 ```
 
@@ -50,4 +50,4 @@ function Activate-Office2021 {
 ```
 
 ## Run
-Run `setup_windows.ps1` via Powershell or Right-click -> Run
+Run `setup_fully.ps1` via Powershell or Right-click -> Run

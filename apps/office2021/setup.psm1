@@ -1,11 +1,5 @@
 
 # Returns process object
-function Install-Chrome {
-    $ChromeInstallProcess = Start-Process -FilePath "$PSScriptRoot\ChromeSetup.exe" -PassThru
-    return $ChromeInstallProcess
-}
-
-# Returns process object
 function Install-Office2021 {
     Param(
         [Parameter(Mandatory=$true)]
@@ -40,4 +34,21 @@ function Install-Office2021 {
     $officeInstallProcess = Start-Process -FilePath "$PSScriptRoot\Office2021Setup.exe" -ArgumentList "/configure `"$TempConfigurationPath`"" -PassThru
 
     return $officeInstallProcess
+}
+
+function CopyOfficeShortcuts-ToDesktop {
+    Copy-Item `
+        -Path "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Word.lnk" `
+        -Destination $env:Public\Desktop\ `
+        -Force
+
+    Copy-Item `
+        -Path "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Excel.lnk" `
+        -Destination $env:Public\Desktop\ `
+        -Force
+
+    Copy-Item `
+        -Path "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\PowerPoint.lnk" `
+        -Destination $env:Public\Desktop\ `
+        -Force
 }

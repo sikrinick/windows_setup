@@ -1,3 +1,34 @@
+function Install-LocalesFromConfiguration {
+    Param(
+        [Parameter(Mandatory=$true, Position=0)]
+        [string]$PrimaryLanguageCode,
+        [Parameter(Mandatory=$true, Position=1)]
+        [string[]]$SecondaryLanguages,
+        [Parameter(Mandatory=$true, Position=2)]
+        [int]$GeoId,
+        [Parameter(Mandatory=$true, Position=3)]
+        [string]$TimeZone
+    )
+
+    # Install languages
+    Install-PrimaryLanguage -LanguageCode $PrimaryLanguageCode
+    foreach ($LanguageCode in $SecondaryLanguages) {
+        Install-SecondaryLanguage -LanguageCode $LanguageCode
+    }
+
+    # Remove not used languages
+    $LanguagesToKeep = @($PrimaryLanguageCode) + $SecondaryLanguages
+    Remove-OtherLanguages -LanguagesToKeep $LanguagesToKeep
+
+    # Set locale
+    Set-LocaleSettings `
+        -GeoId $GeoId `
+        -TimeZone $TimeZone
+
+    # TODO! Set primary locale settings as default for new and system users
+
+    Start-Process ms-settings:regionlanguage
+}
 
 function Install-PrimaryLanguage {
     Param(
@@ -5,7 +36,7 @@ function Install-PrimaryLanguage {
         [string]$LanguageCode
     )
     Write-Output "Installing primary language and installing language pack: $LanguageCode"
-    Install-Language $LanguageCode
+    Install-Language -Language $LanguageCode -CopyToSettings
 }
 
 function Install-SecondaryLanguage {
@@ -25,32 +56,18 @@ function Remove-OtherLanguages {
     Set-WinUserLanguageList $LanguagesToKeep -Force
 }
 
-function Set-PrimaryLocale {
+function Set-LocaleSettings {
     Param(
         [Parameter(Mandatory=$true, Position=0)]
-        [string]$LanguageCode,
-        [Parameter(Mandatory=$true, Position=1)]
         [int]$GeoId,
-        [Parameter(Mandatory=$true, Position=2)]
+        [Parameter(Mandatory=$true, Position=1)]
         [string]$TimeZone
     )
 
     Write-Output "Setting $LanguageCode as primary language"
 
-    Set-WinUILanguageOverride -Language $LanguageCode
-    Set-WinSystemLocale -SystemLocale $LanguageCode
-    Set-WinDefaultInputMethodOverride -InputTip $LanguageCode
-    Set-Culture $LanguageCode
-    
-    Set-PreferredLanguage $LanguageCode
-    Set-SystemPreferredUILanguage $LanguageCode
-    Set-SystemLanguage $LanguageCode
-
-    # Set location to Ukraine
     Set-WinHomeLocation -GeoId $GeoId
-
-    # Set time zone to Kyiv
     Set-TimeZone -Id $TimeZone
-
-    # TODO! Set primary locale settings as default for new and system users
 }
+
+Export-ModuleMember -Function Install-LocalesFromConfiguration
