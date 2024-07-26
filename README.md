@@ -42,7 +42,7 @@ TimeZones can be found [here (column Timezone)](https://learn.microsoft.com/en-u
 
 ## Activation
 
-This is a secret sauce. If you want to automate it, you have to create `install/activate.psm1` Powershell module with next content:
+This is a secret sauce. If you want to automate it, you have to create `apps/office2021/activate.psm1` Powershell module with next content:
 ```powershell
 function Activate-Office2021 {
     # Put your code to activate Office 2021
@@ -50,4 +50,9 @@ function Activate-Office2021 {
 ```
 
 ## Run
+
+### Full run
 Run `setup_fully.ps1` via Powershell or Right-click -> Run
+
+### Without language install
+Run `setup_without_language.ps1` via Powershell or Right-click -> Run
