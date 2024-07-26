@@ -4,5 +4,5 @@
 configuration.json
 
 # Activation scripts
-apps/chrome/activate.psm1
-activate_windows.ps1
+apps/office2021/activate.psm1
+windows/activate.ps1

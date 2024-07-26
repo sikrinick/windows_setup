@@ -7,7 +7,7 @@ if (RestartAsAdministrator-IfNeeded) {
     Exit
 }
 
-$Configuration = Get-Content $PSScriptRoot\..\configuration.json | ConvertFrom-Json
+$Configuration = Get-Content $PSScriptRoot\..\..\configuration.json | ConvertFrom-Json
 
 $officeInstallProcess = Install-Office2021 -LanguageCode $Configuration.PrimaryLanguageCode
 $officeInstallProcess.WaitForExit()
