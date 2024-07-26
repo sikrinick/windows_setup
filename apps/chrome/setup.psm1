@@ -6,11 +6,8 @@ function Install-Chrome {
 }
 
 function Set-ChromeAsDefault {
-    # TODO. Does nothing
-#    http ChromeHTML
-#    Start-Process -FilePath "$PSScriptRoot\ChromeSetup.exe" -Wait
-#    D:\tools\SetUserFTA.exe  http ChromeHTML
-#D:\tools\SetUserFTA.exe  https ChromeHTML
-#D:\tools\SetUserFTA.exe  .htm ChromeHTML
-#D:\tools\SetUserFTA.exe  .html ChromeHTML
+    Start-Process -FilePath "$PSScriptRoot\SetUserFTA.exe" -ArgumentList "http ChromeHtml" -Wait
+    Start-Process -FilePath "$PSScriptRoot\SetUserFTA.exe" -ArgumentList "https ChromeHtml" -Wait
+    Start-Process -FilePath "$PSScriptRoot\SetUserFTA.exe" -ArgumentList ".htm ChromeHtml" -Wait
+    Start-Process -FilePath "$PSScriptRoot\SetUserFTA.exe" -ArgumentList ".html ChromeHtml" -Wait
 }

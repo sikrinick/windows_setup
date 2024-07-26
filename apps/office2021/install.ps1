@@ -15,10 +15,4 @@ Write-Output "Office 2021 is installed"
 
 CopyOfficeShortcuts-ToDesktop
 
-# Try to activate products, if possible
-Try {
-    Activate-Office2021
-}
-Catch {
-    Write-Error "Failed to activate Office 2021."
-}
+Activate-Office2021
