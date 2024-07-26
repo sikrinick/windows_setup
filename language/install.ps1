@@ -10,6 +10,7 @@ $Configuration = Get-Content $PSScriptRoot\..\configuration.json | ConvertFrom-J
 
 Install-LocalesFromConfiguration `
     -PrimaryLanguageCode $Configuration.PrimaryLanguageCode `
+    -PrimaryInputCode $Configuration.PrimaryInputCode `
     -SecondaryLanguages $Configuration.SecondaryLanguages `
     -GeoId $Configuration.GeoId `
     -TimeZone $Configuration.TimeZone

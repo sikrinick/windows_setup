@@ -6,7 +6,7 @@ function Print-ComputerInfo {
     Write-Object "CPU: $processor"
 
     $ramGb = [Math]::Round((Get-WmiObject -Class Win32_ComputerSystem -ComputerName localhost).TotalPhysicalMemory/1Gb)
-    Write-Object "RAM: $(ramGb)GB"
+    Write-Object "RAM: $($ramGb)GB"
 
     $capacity = foreach ($disk in Get-WmiObject -Class Win32_DiskDrive)
     {

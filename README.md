@@ -23,7 +23,7 @@ A bunch of Powershell scripts to prepare used laptops with preinstalled Windows 
 ## Setup
 
 Firstly, you have to create file `configuration.json`, you can check example below.  
-In this example `GeoId` is set to `Ukraine` and `TimeZone` is set to `Kyiv`.
+In this example `GeoId` is set to `Ukraine`, `TimeZone` is set to `Kyiv`, and default welcome screen and new user input is set to `Ukrainian (Extended)`.
 ```json
 {
     "SSID": "YOUR_SSID",
@@ -33,7 +33,9 @@ In this example `GeoId` is set to `Ukraine` and `TimeZone` is set to `Kyiv`.
     "SecondaryLanguages": ["en-US"],
     
     "GeoId": 241, 
-    "TimeZone": "FLE Standard Time"
+    "TimeZone": "FLE Standard Time",
+
+    "PrimaryInputCode": "0422:00020422"
 }
 ```
 
