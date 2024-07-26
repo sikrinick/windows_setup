@@ -4,14 +4,6 @@ function Setup {
         [bool]$InstallLanguage
     )
 
-    # Import dependencies
-    Try {
-        Import-Module $PSScriptRoot\install\activate.psm1
-    }
-    Catch {
-        Write-Error "Failed to import module .\install\activate.psm1. Did you add implementation?"
-    }
-
     # Import configuration
     Try {
         $Configuration = Get-Content $PSScriptRoot\configuration.json | ConvertFrom-Json
@@ -27,6 +19,9 @@ function Setup {
     Write-Output "Connecting to WiFi $($Configuration.SSID)"
     Setup-Wifi -SSID $Configuration.SSID -Password $Configuration.Password
 
+    # Update Windows
+    Import-Module $PSScriptRoot\windows\update.psm1
+    Update-Windows
 
     # Apps
     Import-Module $PSScriptRoot\apps\chrome\setup.psm1
