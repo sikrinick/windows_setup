@@ -1,6 +1,6 @@
 function Print-ComputerInfo {
-
-    Get-WmiObject -Class Win32_ComputerSystem -Property Manufacturer, Model
+    $info = Get-WmiObject -Class Win32_ComputerSystem -Property Manufacturer, Model
+    Write-Object "Model: $info"
 
     $processor = (Get-WmiObject Win32_Processor).Name
     Write-Object "CPU: $processor"

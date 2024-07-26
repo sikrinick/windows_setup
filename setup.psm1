@@ -72,6 +72,10 @@ function Setup {
             -TimeZone $Configuration.TimeZone
     }
     Write-Output "All tasks completed."
+
+    Import-Module $PSScriptRoot\windows\hardware.psm1
+    Print-ComputerInfo
+
     #Write-Output "Press any key to restart"
     Read-Host "Finished"
 }
