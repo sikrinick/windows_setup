@@ -71,8 +71,6 @@ function Set-LocaleSettings {
         [string]$TimeZone
     )
 
-    Write-Output "Setting $LanguageCode as primary language"
-
     Set-WinHomeLocation -GeoId $GeoId
     Set-TimeZone -Id $TimeZone
 }
