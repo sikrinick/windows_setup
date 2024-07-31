@@ -14,3 +14,5 @@ Install-LocalesFromConfiguration `
     -SecondaryLanguages $Configuration.SecondaryLanguages `
     -GeoId $Configuration.GeoId `
     -TimeZone $Configuration.TimeZone
+
+Read-Host "Finished"

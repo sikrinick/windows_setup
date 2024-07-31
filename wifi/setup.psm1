@@ -53,5 +53,17 @@ function Setup-Wifi {
     # Clean up the temporary profile file
     Remove-Item -Path $TempProfilePath
 
+    # Test
+    $TryIdx = 1
+    Do {
+        Try {
+            $Success = Test-Connection "www.google.com" -Quiet
+        }
+        Catch {
+            Write-Output "Test request failed. Try #$TryIdx"
+        }
+        $TryIdx++
+    } Until ($Success)
+
     Write-Output "Connected to Wi-Fi network $SSID."
 }
