@@ -29,14 +29,20 @@ function Install-Office2021 {
 
     # Save the profile XML to a temporary file
     $TempConfigurationPath = [System.IO.Path]::GetTempFileName() + ".xml"
-    Set-Content -Path $TempConfigurationPath -Value $OfficeConfiguration
+    Try {
+        Set-Content -Path $TempConfigurationPath -Value $OfficeConfiguration
 
-    $officeInstallProcess = Start-Process -FilePath "$PSScriptRoot\Office2021Setup.exe" -ArgumentList "/configure `"$TempConfigurationPath`"" -PassThru
+        $officeInstallProcess = Start-Process -FilePath "$PSScriptRoot\Office2021Setup.exe" -ArgumentList "/configure `"$TempConfigurationPath`"" -PassThru
+    }
+    Catch {
+        Remove-Item -Path $TempConfigurationPath -ErrorAction Ignore
+        throw
+    }
 
     return $officeInstallProcess
 }
 
-function CopyOfficeShortcuts-ToDesktop {
+function Copy-OfficeShortcutsToDesktop {
     Copy-Item `
         -Path "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Word.lnk" `
         -Destination $env:Public\Desktop\ `

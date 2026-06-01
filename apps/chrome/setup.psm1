@@ -1,8 +1,13 @@
-
 # Returns process object
 function Install-Chrome {
-    $ChromeInstallProcess = Start-Process -FilePath "$PSScriptRoot\ChromeSetup.exe" -PassThru
-    return $ChromeInstallProcess
+    return Start-Process -FilePath "winget" -ArgumentList @(
+        "install",
+        "--id", "Google.Chrome",
+        "--exact",
+        "--silent",
+        "--accept-package-agreements",
+        "--accept-source-agreements"
+    ) -PassThru -NoNewWindow
 }
 
 function Set-ChromeAsDefault {

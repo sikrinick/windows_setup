@@ -1,6 +1,6 @@
 # WiFi
 
-function Setup-Wifi {
+function Connect-Wifi {
     Param(
         [Parameter(Mandatory=$true, Position=0)]
         [string]$SSID,
@@ -39,19 +39,21 @@ function Setup-Wifi {
 
     # Save the profile XML to a temporary file
     $TempProfilePath = [System.IO.Path]::GetTempFileName() + ".xml"
-    Set-Content -Path $TempProfilePath -Value $ProfileXml
+    Try {
+        Set-Content -Path $TempProfilePath -Value $ProfileXml
 
-    # Remove profile with the same name, just in case
-    netsh wlan delete profile "$SSID"
+        # Remove profile with the same name, just in case
+        netsh wlan delete profile "$SSID" 2>&1 | Out-Null
 
-    # Add the Wi-Fi profile to the system
-    netsh wlan add profile filename="$TempProfilePath"
+        # Add the Wi-Fi profile to the system
+        netsh wlan add profile filename="$TempProfilePath" 2>&1 | Out-Null
 
-    # Connect to the Wi-Fi network
-    netsh wlan connect name="$SSID"
-
-    # Clean up the temporary profile file
-    Remove-Item -Path $TempProfilePath
+        # Connect to the Wi-Fi network
+        netsh wlan connect name="$SSID" 2>&1 | Out-Null
+    }
+    Finally {
+        Remove-Item -Path $TempProfilePath -ErrorAction Ignore
+    }
 
     # Test
     $TryIdx = 1

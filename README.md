@@ -36,19 +36,25 @@ You can find `GeoId` value for your country [here (decimal values)](https://lear
 
 This is a secret sauce. If you want to automate it, you have to create `apps/office2021/activate.psm1` Powershell module with next content:
 ```powershell
-function Activate-Office2021 {
+function Enable-Office2021 {
     # Put your code to activate Office 2021
 }
 ```
 
 ## Usage
 
-### Part 1. Windows updates and apps
-- Run `setup_1.ps1` (takes around 8 minutes)
-- Wait for a restart
+All actions go through `setup.ps1`. Run `Get-Help .\setup.ps1 -Full` (or `.\setup.ps1 -?`) for full help.
+The `-Phase` parameter is tab-completable.
 
-### Part 2. Language
-- Run `setup_2.ps1` (takes around 8 minutes)
+### Part 1. Run setup
+- Run `.\setup.ps1` (defaults to `-Phase All`)
+- Phase1 runs (Wi-Fi, updates, Chrome, Office — ~8 minutes)
+- Laptop reboots
+- On next login, Phase2 (language and locale) starts automatically via `RunOnce`
+
+> Phase2 launches from the path the script was first invoked from. Keep the USB drive plugged in across the reboot.
+
+### Part 2. Manual finish (after Phase2)
 - Wait until `Language settings` are opened
 - Open `Administrative language settings`
 - `Copy settings`
@@ -61,31 +67,41 @@ function Activate-Office2021 {
 - Check Languages settings, Region, TimeZone
 - Check if any Office 2021 app is activated (if needed)
 
-## What scripts do
+### Re-running a single step
+Atomic phases are available for debugging or partial re-runs:
+- `.\setup.ps1 -Phase Wifi`
+- `.\setup.ps1 -Phase Updates`
+- `.\setup.ps1 -Phase Chrome`
+- `.\setup.ps1 -Phase Office`
+- `.\setup.ps1 -Phase Language`
 
-### setup_1.ps1
+`.\setup.ps1 -Phase Phase1` runs Phase1 only (no auto-resume); `.\setup.ps1 -Phase Phase2` runs Phase2 only.
+
+## What phases do
+
+### All (default)
+- Runs `Phase1`
+- Registers `Phase2` in `HKLM\…\RunOnce` so it fires for the next user login after reboot
+- Reboots
+
+### Phase1
 - Import `configuration.json`
 - Connect to Wi-Fi
 - Wait for internet availability
 - Install Windows Updates, if possible
-- Install Chrome
+- Install Chrome (in parallel with Office)
 - Install Office 2021 Basic (Word, Excel, PowerPoint) with language set in configuration
 - Activate Office 2021, if possible
 - Restart to install updates
 
-### setup_2.ps1
+### Phase2
 - Install language pack for primary language
 - Install secondary languages
 - Remove other languages
 - Set default timezone
 - Set default region
 
-### info.ps1
-Utility script for laptop information
-
 ## TODO
 - Add support for `Copy internation settings to the welcome screen, system accounts and new user accounts` for Windows 10
 - Add support for Windows 11
 - Test on earlier Windows 10 versions (2016 and earlier)
-- Fix `info.ps1`
-- Make `pswindowsupdate` import local, if possible

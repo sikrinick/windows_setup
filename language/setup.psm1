@@ -112,12 +112,14 @@ function Copy-UserInternationalSettingsToWelcomeAndNewUser {
 
         # Save the profile XML to a temporary file
         $TempProfilePath = [System.IO.Path]::GetTempFileName() + ".xml"
-        Set-Content -Path $TempProfilePath -Value $ProfileXml
+        Try {
+            Set-Content -Path $TempProfilePath -Value $ProfileXml
 
-        Start-Process -FilePath "$env:SystemRoot\System32\control.exe" -ArgumentList "intl.cpl,,/f:`"$TempProfilePath`"" -Wait
-        
-        # Clear
-        Remove-Item -Path $TempProfilePath
+            Start-Process -FilePath "$env:SystemRoot\System32\control.exe" -ArgumentList "intl.cpl,,/f:`"$TempProfilePath`"" -Wait
+        }
+        Finally {
+            Remove-Item -Path $TempProfilePath -ErrorAction Ignore
+        }
     }
 }
 

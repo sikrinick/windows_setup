@@ -6,3 +6,6 @@ configuration.json
 # Activation scripts
 apps/office2021/activate.psm1
 windows/activate.ps1
+
+# Logs
+logs/
