@@ -1,6 +1,6 @@
 # Windows Setup scripts
 
-A bunch of Powershell scripts to prepare used laptops with preinstalled Windows 10 21H2 for everyday usage.
+A bunch of Powershell scripts to prepare used laptops with preinstalled Windows 10 21H2 or Windows 11 for everyday usage.
 
 ## Purpose
 
@@ -8,7 +8,7 @@ I prepare laptops for Ukrainian soldiers or refugees occasionally, and those are
 
 ## Requirements
 
-- Windows 10 21H2+
+- Windows 10 21H2+ or Windows 11
 
 ## Preparations
 
@@ -46,26 +46,13 @@ function Enable-Office2021 {
 All actions go through `setup.ps1`. Run `Get-Help .\setup.ps1 -Full` (or `.\setup.ps1 -?`) for full help.
 The `-Phase` parameter is tab-completable.
 
-### Part 1. Run setup
 - Run `.\setup.ps1` (defaults to `-Phase All`)
 - Phase1 runs (Wi-Fi, updates, Chrome, Office — ~8 minutes)
 - Laptop reboots
 - On next login, Phase2 (language and locale) starts automatically via `RunOnce`
+- Phase2 copies international settings to the Welcome screen and new user accounts, then reboots
 
 > Phase2 launches from the path the script was first invoked from. Keep the USB drive plugged in across the reboot.
-
-### Part 2. Manual finish (after Phase2)
-- Wait until `Language settings` are opened
-- Open `Administrative language settings`
-- `Copy settings`
-- Tick both `Welcome screen and system accounts` and `New user accounts`
-- Restart laptop
-
-![](docs/admin_settings.png)
-
-### Part 3. Manual Job
-- Check Languages settings, Region, TimeZone
-- Check if any Office 2021 app is activated (if needed)
 
 ### Re-running a single step
 Atomic phases are available for debugging or partial re-runs:
@@ -100,8 +87,6 @@ Atomic phases are available for debugging or partial re-runs:
 - Remove other languages
 - Set default timezone
 - Set default region
+- Copy international settings to the Welcome screen and new user accounts
+- Restart
 
-## TODO
-- Add support for `Copy internation settings to the welcome screen, system accounts and new user accounts` for Windows 10
-- Add support for Windows 11
-- Test on earlier Windows 10 versions (2016 and earlier)

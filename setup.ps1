@@ -9,7 +9,7 @@
     Composite phases:
       All      - Phase1, reboot, then automatically run Phase2 on next login. (default)
       Phase1   - Wi-Fi + Updates + Chrome + Office. Ends with a restart.
-      Phase2   - Language pack, locale, and welcome-screen copy. Run after Phase1.
+      Phase2   - Language pack, locale, and welcome-screen copy. Run after Phase1. Ends with a restart.
 
     Atomic phases (re-runs / debugging):
       Wifi     - Connect to the configured Wi-Fi.
@@ -67,9 +67,6 @@ Trap {
 Import-Module $PSScriptRoot\windows\administrator.psm1
 
 if (Restart-AsAdminIfNeeded -ScriptPath $PSCommandPath -BoundParameters $PSBoundParameters) { Exit }
-
-Import-Module $PSScriptRoot\windows\winget.psm1
-Install-WingetIfMissing
 
 function Get-SetupConfiguration {
     Try {
@@ -187,7 +184,7 @@ switch ($Phase) {
     }
     'Phase2' {
         Invoke-LanguagePhase
-        Read-Host "Finished"
+        Restart-Computer
     }
     'All' {
         Invoke-Phase1Body

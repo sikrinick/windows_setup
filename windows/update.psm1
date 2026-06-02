@@ -9,5 +9,5 @@ function Update-Windows {
     Import-Module PSWindowsUpdate
     
     Write-Output "Installing Windows Updates"
-    Install-WindowsUpdate -AcceptAll -IgnoreReboot
+    Get-WindowsUpdate -AcceptAll -Install -IgnoreReboot
 }

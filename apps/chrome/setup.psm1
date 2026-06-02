@@ -1,13 +1,8 @@
 # Returns process object
 function Install-Chrome {
-    return Start-Process -FilePath "winget" -ArgumentList @(
-        "install",
-        "--id", "Google.Chrome",
-        "--exact",
-        "--silent",
-        "--accept-package-agreements",
-        "--accept-source-agreements"
-    ) -PassThru -NoNewWindow
+    $installer = "$env:TEMP\chrome_install.exe"
+    Invoke-WebRequest -Uri "https://dl.google.com/chrome/install/latest/chrome_installer.exe" -OutFile $installer
+    return Start-Process -FilePath $installer -ArgumentList "/silent /install" -PassThru -Wait
 }
 
 function Set-ChromeAsDefault {
