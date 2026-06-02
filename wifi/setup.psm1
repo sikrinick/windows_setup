@@ -1,5 +1,70 @@
 # WiFi
 
+function Get-WifiAdapter {
+    Get-NetAdapter -Physical -ErrorAction SilentlyContinue | Where-Object {
+        $_.PhysicalMediaType -eq 'Native 802.11' -or
+        $_.InterfaceDescription -match 'Wireless|Wi-Fi|WLAN'
+    } | Select-Object -First 1
+}
+
+function Enable-WifiRadio {
+    # Turns the Wi-Fi radio on (covers airplane mode / soft kill switch).
+    Try {
+        Add-Type -AssemblyName System.Runtime.WindowsRuntime -ErrorAction Stop
+
+        $asTaskGeneric = [System.WindowsRuntimeSystemExtensions].GetMethods() |
+            Where-Object {
+                $_.Name -eq 'AsTask' -and
+                $_.GetParameters().Count -eq 1 -and
+                $_.GetParameters()[0].ParameterType.Name -eq 'IAsyncOperation`1'
+            } | Select-Object -First 1
+
+        function Await($op, $resultType) {
+            $task = $asTaskGeneric.MakeGenericMethod($resultType).Invoke($null, @($op))
+            $task.Wait(-1) | Out-Null
+            $task.Result
+        }
+
+        [Windows.Devices.Radios.Radio,Windows.Devices.Radios,ContentType=WindowsRuntime] | Out-Null
+        [Windows.Devices.Radios.RadioAccessStatus,Windows.Devices.Radios,ContentType=WindowsRuntime] | Out-Null
+        [Windows.Devices.Radios.RadioState,Windows.Devices.Radios,ContentType=WindowsRuntime] | Out-Null
+
+        Await ([Windows.Devices.Radios.Radio]::RequestAccessAsync()) ([Windows.Devices.Radios.RadioAccessStatus]) | Out-Null
+        $radios = Await ([Windows.Devices.Radios.Radio]::GetRadiosAsync()) ([System.Collections.Generic.IReadOnlyList[Windows.Devices.Radios.Radio]])
+
+        foreach ($r in $radios) {
+            if ($r.Kind -eq [Windows.Devices.Radios.RadioKind]::WiFi -and $r.State -ne [Windows.Devices.Radios.RadioState]::On) {
+                Await ($r.SetStateAsync([Windows.Devices.Radios.RadioState]::On)) ([Windows.Devices.Radios.RadioAccessStatus]) | Out-Null
+            }
+        }
+    }
+    Catch {
+        Write-Warning "Could not toggle Wi-Fi radio via Radio API: $_"
+    }
+}
+
+function Enable-Wifi {
+    $adapter = Get-WifiAdapter
+    if (-not $adapter) {
+        Write-Warning "No Wi-Fi adapter found."
+        return
+    }
+
+    if ($adapter.Status -eq 'Disabled') {
+        Write-Output "Enabling Wi-Fi adapter: $($adapter.Name)"
+        Enable-NetAdapter -Name $adapter.Name -Confirm:$false
+    }
+
+    Enable-WifiRadio
+
+    # Make sure WLAN AutoConfig service is running, otherwise netsh wlan fails.
+    $svc = Get-Service -Name WlanSvc -ErrorAction SilentlyContinue
+    if ($svc -and $svc.Status -ne 'Running') {
+        Set-Service -Name WlanSvc -StartupType Automatic
+        Start-Service -Name WlanSvc
+    }
+}
+
 function Connect-Wifi {
     Param(
         [Parameter(Mandatory=$true, Position=0)]
@@ -7,6 +72,8 @@ function Connect-Wifi {
         [Parameter(Mandatory=$true, Position=1)]
         [string]$Password
     )
+
+    Enable-Wifi
 
     # Create the Wi-Fi profile XML content
     $ProfileXml = @"
