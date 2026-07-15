@@ -55,7 +55,7 @@ function Install-SecondaryLanguage {
     $isWin11 = (Get-CimInstance Win32_OperatingSystem).BuildNumber -ge 22000
 
     if ($isWin11) {
-      Install-Language -Language $LanguageCode -ExcludeFeatures -ErrorAction -Stop
+      Install-Language -Language $LanguageCode -ExcludeFeatures -ErrorAction Stop
     } else {
       try {
         Install-Language -Language $LanguageCode -ExcludeFeatures -ErrorAction -Stop

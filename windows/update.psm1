@@ -7,7 +7,8 @@ function Update-Windows {
     Write-Output "Installing PSWindowUpdate from PSGallery"
     Install-Module -Name PSWindowsUpdate -Verbose
     Import-Module PSWindowsUpdate
+    Add-WUServiceManager -MicrosoftUpdate -Confirm:$false | Out-Null
     
     Write-Output "Installing Windows Updates"
-    Get-WindowsUpdate -AcceptAll -Install -IgnoreReboot
+    Get-WindowsUpdate -MicrosoftUpdate -AcceptAll -Install -IgnoreReboot
 }
